@@ -21,6 +21,11 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
         'path'=>'register',
         'normalization_context' => ['groups' => ['user:read:simple']]
         ],
+        "add" => [
+            'method' => 'Post',
+            "path"=>"/email",
+            "controller"=>MailerController::class,
+            ]
         ]
 )]
 #[ORM\InheritanceType("JOINED")]
