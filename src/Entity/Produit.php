@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ProduitRepository::class)]
 #[ORM\InheritanceType("JOINED")]
@@ -20,27 +21,31 @@ class Produit
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
     #[Groups(["burger:read:simple","burger:read:all"])]
-    private $id;
+    protected $id;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\NotBlank(message:'le burger ne doit pas etre vide')]
     #[Groups(["burger:read:simple","burger:read:all","write"])]
-    private $nom;
+    protected $nom;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\NotBlank(message:'le burger doit avoir une image')]
     #[Groups(["burger:read:simple","burger:read:all","write"])]
-    private $image;
+    protected $image;
 
     #[ORM\Column(type: 'float')]
+    #[Assert\NotBlank(message:'le burger doit avoir un prix')]
     #[Groups(["burger:read:simple","burger:read:all","write"])]
-    private $prix;
+    protected $prix;
 
     #[ORM\Column(type: 'string', length: 255)]
     #[Groups(["burger:read:all"])]
-    private $etat="disponible";
+    protected $etat="disponible";
 
     #[ORM\Column(type: 'text')]
     #[Groups(["burger:read:simple","burger:read:all","write"])]
-    private $description;
+    #[Assert\NotBlank(message:'le burger doit avoir une description')]
+    protected $description;
 
     #[ORM\OneToMany(mappedBy: 'produit', targetEntity: ProduitCommande::class)]
     private $produitCommandes;

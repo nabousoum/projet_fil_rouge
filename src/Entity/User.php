@@ -8,10 +8,21 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
-
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-#[ApiResource]
+#[UniqueEntity(fields:'login',message:'le login doit etre unique')]
+#[ApiResource(
+    collectionOperations:[
+        "get",
+        "post_register" => [
+        "method"=>"post",
+        'path'=>'register',
+        'normalization_context' => ['groups' => ['user:read:simple']]
+        ],
+        ]
+)]
 #[ORM\InheritanceType("JOINED")]
 #[ORM\DiscriminatorColumn(name: "discr", type: "string")]
 #[ORM\DiscriminatorMap(["user" => "User", "gestionnaire" => "Gestionnaire","client" => "Client", "livreur" => "Livreur" ])]
@@ -20,25 +31,28 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(["burger:read:all","write"])]
+    #[Groups(["burger:read:all","write","user:read:simple"])]
     private $id;
 
     #[ORM\Column(type: 'string', length: 180, unique: true)]
-    #[Groups(["burger:read:all"])]
+    #[Groups(["burger:read:all","user:read:simple"])]
     private $login;
 
     #[ORM\Column(type: 'json')]
+    #[Groups(["user:read:simple"])]
     private $roles = [];
 
     #[ORM\Column(type: 'string')]
     private $password;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(["burger:read:all"])]
+    #[Assert\NotBlank(message:'le nom ne doit pas etre vide')]
+    #[Groups(["burger:read:all","user:read:simple"])]
     private $nom;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(["burger:read:all"])]
+    #[Assert\NotBlank(message:'le prenom ne doit pas etre vide')]
+    #[Groups(["burger:read:all","user:read:simple"])]
     private $prenom;
 
     public function getId(): ?int

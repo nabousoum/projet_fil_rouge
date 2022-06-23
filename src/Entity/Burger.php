@@ -13,6 +13,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\HttpFoundation\Response;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: BurgerRepository::class)]
 #[ApiResource(
@@ -37,7 +38,12 @@ use Symfony\Component\Serializer\Annotation\Groups;
         'status' => Response::HTTP_OK,
         'normalization_context' => ['groups' => ['burger:read:all']],
         ],
-    ]
+    "delete"=>[
+        "security"=>"is_granted('ROLE_GESTIONNAIRE')",
+        "security_message"=>"Vous n'avez pas access à cette Ressource",
+        ]
+    ],
+  
 )]
 class Burger extends Produit
 {
