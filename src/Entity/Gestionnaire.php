@@ -2,32 +2,29 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
-use App\Repository\GestionnaireRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\GestionnaireRepository;
+use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
+use Doctrine\Common\Collections\ArrayCollection;
 
 #[ORM\Entity(repositoryClass: GestionnaireRepository::class)]
 #[ApiResource]
-class Gestionnaire
+class Gestionnaire  extends User
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
-    private $id;
-
+  
     #[ORM\OneToMany(mappedBy: 'gestionnaire', targetEntity: Commande::class)]
     private $commandes;
+
+    #[ORM\OneToMany(mappedBy: 'gestionnaire', targetEntity: Burger::class)]
+    #[ApiSubresource]
+    private $burgers;
 
     public function __construct()
     {
         $this->commandes = new ArrayCollection();
-    }
-
-    public function getId(): ?int
-    {
-        return $this->id;
+        $this->burgers = new ArrayCollection();
     }
 
     /**
@@ -54,6 +51,36 @@ class Gestionnaire
             // set the owning side to null (unless already changed)
             if ($commande->getGestionnaire() === $this) {
                 $commande->setGestionnaire(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Burger>
+     */
+    public function getBurgers(): Collection
+    {
+        return $this->burgers;
+    }
+
+    public function addBurger(Burger $burger): self
+    {
+        if (!$this->burgers->contains($burger)) {
+            $this->burgers[] = $burger;
+            $burger->setGestionnaire($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBurger(Burger $burger): self
+    {
+        if ($this->burgers->removeElement($burger)) {
+            // set the owning side to null (unless already changed)
+            if ($burger->getGestionnaire() === $this) {
+                $burger->setGestionnaire(null);
             }
         }
 

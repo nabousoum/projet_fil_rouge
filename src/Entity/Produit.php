@@ -2,11 +2,12 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
-use App\Repository\ProduitRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\ProduitRepository;
+use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ProduitRepository::class)]
 #[ORM\InheritanceType("JOINED")]
@@ -18,21 +19,27 @@ class Produit
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(["burger:read:simple","burger:read:all"])]
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(["burger:read:simple","burger:read:all","write"])]
     private $nom;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(["burger:read:simple","burger:read:all","write"])]
     private $image;
 
     #[ORM\Column(type: 'float')]
+    #[Groups(["burger:read:simple","burger:read:all","write"])]
     private $prix;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $etat;
+    #[Groups(["burger:read:all"])]
+    private $etat="disponible";
 
     #[ORM\Column(type: 'text')]
+    #[Groups(["burger:read:simple","burger:read:all","write"])]
     private $description;
 
     #[ORM\OneToMany(mappedBy: 'produit', targetEntity: ProduitCommande::class)]
