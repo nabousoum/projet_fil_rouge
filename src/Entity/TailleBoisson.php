@@ -2,14 +2,44 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
-use App\Repository\TailleBoissonRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\TailleBoissonRepository;
+use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\HttpFoundation\Response;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: TailleBoissonRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    collectionOperations:[
+        "get"=>[
+        'method' => 'get',
+        'status' => Response::HTTP_OK,
+        'normalization_context' => ['groups' => ['burger:read:simple']],
+        ]
+    ,"post"=>[
+        'denormalization_context' => ['groups' => ['write']],
+        'normalization_context' => ['groups' => ['burger:read:all']],
+        "security"=>"is_granted('ROLE_GESTIONNAIRE')",
+        "security_message"=>"Vous n'avez pas access à cette Ressource",
+    ]],
+    itemOperations:["put"=>[
+        "security"=>"is_granted('ROLE_GESTIONNAIRE')",
+        "security_message"=>"Vous n'avez pas access à cette Ressource",
+    ],
+    "get"=>[
+        'method' => 'get',
+        'status' => Response::HTTP_OK,
+        'normalization_context' => ['groups' => ['burger:read:all']],
+        ],
+    "delete"=>[
+        "security"=>"is_granted('ROLE_GESTIONNAIRE')",
+        "security_message"=>"Vous n'avez pas access à cette Ressource",
+        ]
+    ],
+  
+)]
 class TailleBoisson
 {
     #[ORM\Id]
@@ -18,9 +48,11 @@ class TailleBoisson
     private $id;
 
     #[ORM\Column(type: 'float')]
+    #[Groups(["burger:read:simple","burger:read:all","write"])]
     private $prix;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(["burger:read:simple","burger:read:all","write"])]
     private $libelle;
 
     #[ORM\ManyToMany(targetEntity: Boisson::class, mappedBy: 'tailleBoissons')]

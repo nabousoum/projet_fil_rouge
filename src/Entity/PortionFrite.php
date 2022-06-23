@@ -16,6 +16,9 @@ class PortionFrite extends Produit
     #[ORM\JoinColumn(nullable: false)]
     private $complement;
 
+    #[ORM\ManyToOne(targetEntity: Gestionnaire::class, inversedBy: 'portionFrites')]
+    private $gestionnaire;
+
 
     public function getComplement(): ?Complement
     {
@@ -25,6 +28,18 @@ class PortionFrite extends Produit
     public function setComplement(?Complement $complement): self
     {
         $this->complement = $complement;
+
+        return $this;
+    }
+
+    public function getGestionnaire(): ?Gestionnaire
+    {
+        return $this->gestionnaire;
+    }
+
+    public function setGestionnaire(?Gestionnaire $gestionnaire): self
+    {
+        $this->gestionnaire = $gestionnaire;
 
         return $this;
     }
