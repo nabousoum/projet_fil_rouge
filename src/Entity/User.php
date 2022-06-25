@@ -13,21 +13,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[UniqueEntity(fields:'login',message:'le login doit etre unique')]
-#[ApiResource(
-    collectionOperations:[
-        "get",
-        "post_register" => [
-        "method"=>"post",
-        'path'=>'register',
-        'normalization_context' => ['groups' => ['user:read:simple']]
-        ],
-        "add" => [
-            'method' => 'Post',
-            "path"=>"/email",
-            "controller"=>MailerController::class,
-            ]
-        ]
-)]
+#[ApiResource]
 #[ORM\InheritanceType("JOINED")]
 #[ORM\DiscriminatorColumn(name: "discr", type: "string")]
 #[ORM\DiscriminatorMap(["user" => "User", "gestionnaire" => "Gestionnaire","client" => "Client", "livreur" => "Livreur" ])]

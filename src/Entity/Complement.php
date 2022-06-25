@@ -17,9 +17,6 @@ class Complement
     #[ORM\Column(type: 'integer')]
     private $id;
 
-    #[ORM\ManyToMany(targetEntity: Menu::class, inversedBy: 'complements')]
-    private $menus;
-
     #[ORM\OneToMany(mappedBy: 'complement', targetEntity: PortionFrite::class)]
     private $portionFrites;
 
@@ -28,7 +25,6 @@ class Complement
 
     public function __construct()
     {
-        $this->menus = new ArrayCollection();
         $this->portionFrites = new ArrayCollection();
         $this->tailleBoissons = new ArrayCollection();
     }
@@ -36,30 +32,6 @@ class Complement
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    /**
-     * @return Collection<int, Menu>
-     */
-    public function getMenus(): Collection
-    {
-        return $this->menus;
-    }
-
-    public function addMenu(Menu $menu): self
-    {
-        if (!$this->menus->contains($menu)) {
-            $this->menus[] = $menu;
-        }
-
-        return $this;
-    }
-
-    public function removeMenu(Menu $menu): self
-    {
-        $this->menus->removeElement($menu);
-
-        return $this;
     }
 
     /**

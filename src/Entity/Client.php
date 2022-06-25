@@ -9,7 +9,21 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ClientRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    collectionOperations:[
+        "get",
+        "post_register" => [
+        "method"=>"post",
+        'path'=>'register',
+        'normalization_context' => ['groups' => ['user:read:simple']],
+        ],
+        "add" => [
+            'method' => 'get',
+            "path"=>"/email",
+            "controller"=>MailerController::class,
+            ]
+        ]
+)]
 class Client extends User
 {
   

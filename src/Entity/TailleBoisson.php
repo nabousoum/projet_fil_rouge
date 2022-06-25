@@ -62,9 +62,13 @@ class TailleBoisson
     #[ORM\JoinColumn(nullable: false)]
     private $complement;
 
+    #[ORM\ManyToMany(targetEntity: Menu::class, mappedBy: 'tailleBoissons')]
+    private $menus;
+
     public function __construct()
     {
         $this->boissons = new ArrayCollection();
+        $this->menus = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -131,6 +135,33 @@ class TailleBoisson
     public function setComplement(?Complement $complement): self
     {
         $this->complement = $complement;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Menu>
+     */
+    public function getMenus(): Collection
+    {
+        return $this->menus;
+    }
+
+    public function addMenu(Menu $menu): self
+    {
+        if (!$this->menus->contains($menu)) {
+            $this->menus[] = $menu;
+            $menu->addTailleBoisson($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMenu(Menu $menu): self
+    {
+        if ($this->menus->removeElement($menu)) {
+            $menu->removeTailleBoisson($this);
+        }
 
         return $this;
     }

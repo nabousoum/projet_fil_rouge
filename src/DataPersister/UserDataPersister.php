@@ -2,6 +2,7 @@
 namespace App\DataPersister;
 
 use App\Entity\User;
+use App\Entity\Client;
 use Doctrine\ORM\EntityManagerInterface;
 use ApiPlatform\Core\DataPersister\DataPersisterInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;

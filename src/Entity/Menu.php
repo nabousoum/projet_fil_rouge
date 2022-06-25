@@ -42,10 +42,10 @@ use Symfony\Component\Serializer\Annotation\Groups;
 )]
 class Menu extends Produit
 {
-    #[ORM\ManyToMany(targetEntity: Complement::class, mappedBy: 'menus')]
-    private $complements;
+   
 
     #[ORM\ManyToMany(targetEntity: Burger::class, inversedBy: 'menus')]
+    #[Groups(["burger:read:simple","burger:read:all","write"])]
     private $burgers;
 
     #[ORM\ManyToOne(targetEntity: Catalogue::class, inversedBy: 'menus')]
@@ -56,38 +56,20 @@ class Menu extends Produit
     #[ORM\ManyToOne(targetEntity: Gestionnaire::class, inversedBy: 'menus')]
     private $gestionnaire;
 
+    #[ORM\ManyToMany(targetEntity: PortionFrite::class, inversedBy: 'menus')]
+    #[Groups(["burger:read:simple","burger:read:all","write"])]
+    private $portionFrites;
+
+    #[ORM\ManyToMany(targetEntity: TailleBoisson::class, inversedBy: 'menus')]
+    #[Groups(["burger:read:simple","burger:read:all","write"])]
+    private $tailleBoissons;
+
     public function __construct()
     {
         $this->complements = new ArrayCollection();
         $this->burgers = new ArrayCollection();
-    }
-
-
-    /**
-     * @return Collection<int, Complement>
-     */
-    public function getComplements(): Collection
-    {
-        return $this->complements;
-    }
-
-    public function addComplement(Complement $complement): self
-    {
-        if (!$this->complements->contains($complement)) {
-            $this->complements[] = $complement;
-            $complement->addMenu($this);
-        }
-
-        return $this;
-    }
-
-    public function removeComplement(Complement $complement): self
-    {
-        if ($this->complements->removeElement($complement)) {
-            $complement->removeMenu($this);
-        }
-
-        return $this;
+        $this->portionFrites = new ArrayCollection();
+        $this->tailleBoissons = new ArrayCollection();
     }
 
     /**
@@ -134,6 +116,54 @@ class Menu extends Produit
     public function setGestionnaire(?Gestionnaire $gestionnaire): self
     {
         $this->gestionnaire = $gestionnaire;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, PortionFrite>
+     */
+    public function getPortionFrites(): Collection
+    {
+        return $this->portionFrites;
+    }
+
+    public function addPortionFrite(PortionFrite $portionFrite): self
+    {
+        if (!$this->portionFrites->contains($portionFrite)) {
+            $this->portionFrites[] = $portionFrite;
+        }
+
+        return $this;
+    }
+
+    public function removePortionFrite(PortionFrite $portionFrite): self
+    {
+        $this->portionFrites->removeElement($portionFrite);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, TailleBoisson>
+     */
+    public function getTailleBoissons(): Collection
+    {
+        return $this->tailleBoissons;
+    }
+
+    public function addTailleBoisson(TailleBoisson $tailleBoisson): self
+    {
+        if (!$this->tailleBoissons->contains($tailleBoisson)) {
+            $this->tailleBoissons[] = $tailleBoisson;
+        }
+
+        return $this;
+    }
+
+    public function removeTailleBoisson(TailleBoisson $tailleBoisson): self
+    {
+        $this->tailleBoissons->removeElement($tailleBoisson);
 
         return $this;
     }
