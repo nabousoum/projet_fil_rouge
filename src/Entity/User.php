@@ -23,28 +23,34 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
     #[Groups(["burger:read:all","write","user:read:simple"])]
-    private $id;
+    protected $id;
 
     #[ORM\Column(type: 'string', length: 180, unique: true)]
     #[Groups(["burger:read:all","user:read:simple"])]
-    private $login;
+    protected $login;
 
     #[ORM\Column(type: 'json')]
     #[Groups(["user:read:simple"])]
-    private $roles = [];
+    protected $roles = [];
 
     #[ORM\Column(type: 'string')]
-    private $password;
+    protected $password;
 
     #[ORM\Column(type: 'string', length: 255)]
     #[Assert\NotBlank(message:'le nom ne doit pas etre vide')]
     #[Groups(["burger:read:all","user:read:simple"])]
-    private $nom;
+    protected $nom;
 
     #[ORM\Column(type: 'string', length: 255)]
     #[Assert\NotBlank(message:'le prenom ne doit pas etre vide')]
     #[Groups(["burger:read:all","user:read:simple"])]
-    private $prenom;
+    protected $prenom;
+
+    #[ORM\Column(type: 'boolean')]
+    protected $isVerified=false;
+
+    #[ORM\Column(type: 'string', length: 255)]
+    protected $token;
 
     public function getId(): ?int
     {
@@ -136,6 +142,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPrenom(string $prenom): self
     {
         $this->prenom = $prenom;
+
+        return $this;
+    }
+
+    public function isIsVerified(): ?bool
+    {
+        return $this->isVerified;
+    }
+
+    public function setIsVerified(bool $isVerified): self
+    {
+        $this->isVerified = $isVerified;
+
+        return $this;
+    }
+
+    public function getToken(): ?string
+    {
+        return $this->token;
+    }
+
+    public function setToken(string $token): self
+    {
+        $this->token = $token;
 
         return $this;
     }

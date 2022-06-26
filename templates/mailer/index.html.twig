@@ -1,7 +1,5 @@
-{% extends 'base.html.twig' %}
+salut voici le token
 
-{% block title %}Hello MailerController!{% endblock %}
+<br>
 
-{% block body %}
-mail envoyé
-{% endblock %}
+<a href="{{ url('confirm_account', {"token": token}) }}">Cliquer ici pour confirmer votre compte</a>

@@ -2,20 +2,23 @@
 
 namespace App\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Entity\User;
+use Symfony\Component\Mime\Email;
+use App\Repository\ClientRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Mime\Email;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class MailerController extends AbstractController
 {
     #[Route('/email')]
-    public function __invoke(MailerInterface $mailer): Response
+    public function __invoke(MailerInterface $mailer,User $user): Response
     {
         $email = (new Email())
             ->from('hello@example.com')
-            ->to('you@example.com')
+            ->to($user->getLogin())
             //->cc('cc@example.com')
             //->bcc('bcc@example.com')
             //->replyTo('fabien@example.com')
@@ -28,5 +31,22 @@ class MailerController extends AbstractController
 
         // ...
         return $this->render('mailer/index.html.twig');
+    }
+     
+    #[Route("/confirmAccount/{token}", name:"confirm_account")]
+    public function confirmAccount(string $token, ClientRepository $repo,EntityManagerInterface $manager)
+    {
+        $user = $repo->findOneBy(["token" => $token]);
+        if($user) {
+            $user->setToken("");
+            $user->setIsVerified(true);
+            //$em = $this->getDoctrine()->getManager();
+            $manager->persist($user);
+            $manager->flush();
+            return  $this->render('mailer/confirm.html.twig');
+        } 
+        else{
+            dd("faux");
+        }
     }
 }
