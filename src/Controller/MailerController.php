@@ -37,16 +37,18 @@ class MailerController extends AbstractController
     public function confirmAccount(string $token, ClientRepository $repo,EntityManagerInterface $manager)
     {
         $user = $repo->findOneBy(["token" => $token]);
-        if($user) {
+        $us=new User();
+        if($user && ($user->getExpiredAt() > new \DateTime() ) && ($user->isIsVerified()==false)) {
             $user->setToken("");
             $user->setIsVerified(true);
             //$em = $this->getDoctrine()->getManager();
             $manager->persist($user);
             $manager->flush();
-            return  $this->render('mailer/confirm.html.twig');
+            //return  $this->render('mailer/confirm.html.twig');
+            return $this->json(["succes"=>"votre compte a été activé","status"=>200],200);
         } 
         else{
-            dd("faux");
+            return $this->json(["succes"=>"votre compte n est pas activé","status"=>400],Response::HTTP_BAD_REQUEST);
         }
     }
 }

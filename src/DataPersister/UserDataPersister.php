@@ -6,6 +6,7 @@ use App\Entity\Client;
 use App\Service\Mailer;
 use Doctrine\ORM\EntityManagerInterface;
 use ApiPlatform\Core\DataPersister\DataPersisterInterface;
+use DateTime;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Routing\Annotation\Route;
@@ -37,6 +38,8 @@ class UserDataPersister implements DataPersisterInterface
         );
         $data->setPassword($hashedPassword);
         $data->setToken($this->generateToken());
+        $data->setRoles(["ROLE_CLIENT"]);
+        $data->setExpiredAt(new \DateTime('+1 days'));
         $this->entityManager->persist($data);
         $this->entityManager->flush();
         $this->mailer->sendEmail($data->getLogin(), $data->getToken());

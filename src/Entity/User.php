@@ -52,6 +52,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'string', length: 255)]
     protected $token;
 
+    #[ORM\Column(type: 'datetime')]
+    private $expiredAt;
+
+
     public function getId(): ?int
     {
         return $this->id;
@@ -169,4 +173,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+    public function getExpiredAt(): ?\DateTimeInterface
+    {
+        return $this->expiredAt;
+    }
+
+    public function setExpiredAt(\DateTimeInterface $expiredAt): self
+    {
+        $this->expiredAt = $expiredAt;
+
+        return $this;
+    }
+
+   
 }
