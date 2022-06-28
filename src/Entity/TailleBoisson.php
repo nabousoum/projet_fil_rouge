@@ -60,6 +60,7 @@ class TailleBoisson
 
     #[ORM\ManyToOne(targetEntity: Complement::class, inversedBy: 'tailleBoissons')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(["burger:read:simple","burger:read:all","write"])]
     private $complement;
 
     #[ORM\ManyToMany(targetEntity: Menu::class, mappedBy: 'tailleBoissons')]
