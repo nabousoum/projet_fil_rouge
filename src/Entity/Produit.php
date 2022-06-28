@@ -11,6 +11,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
+
 #[ORM\Entity(repositoryClass: ProduitRepository::class)]
 #[UniqueEntity(fields:'nom',message:'le nom doit etre unique')]
 #[ORM\InheritanceType("JOINED")]
@@ -22,7 +23,7 @@ class Produit
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(["burger:read:simple","burger:read:all"])]
+    #[Groups(["burger:read:simple","burger:read:all","write"])]
     protected $id;
 
     #[ORM\Column(type: 'string', length: 255)]

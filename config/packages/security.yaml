@@ -40,6 +40,9 @@ security:
         - { path: ^/api$, roles: PUBLIC_ACCESS }
         - { path: ^/api/register,roles: PUBLIC_ACCESS }
         - { path: ^/api/burgers,roles: PUBLIC_ACCESS }
+        - { path: ^/api/boissons,roles: PUBLIC_ACCESS }
+        - { path: ^/api/menus,roles: PUBLIC_ACCESS }
+        - { path: ^/api/portion_frites,roles: PUBLIC_ACCESS }
         - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
 
 when@test:

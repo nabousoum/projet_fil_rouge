@@ -45,6 +45,7 @@ class TailleBoisson
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(["write"])]
     private $id;
 
     #[ORM\Column(type: 'float')]
@@ -59,7 +60,6 @@ class TailleBoisson
     private $boissons;
 
     #[ORM\ManyToOne(targetEntity: Complement::class, inversedBy: 'tailleBoissons')]
-    #[ORM\JoinColumn(nullable: false)]
     #[Groups(["burger:read:simple","burger:read:all","write"])]
     private $complement;
 
