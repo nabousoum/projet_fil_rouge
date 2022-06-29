@@ -2,13 +2,15 @@
 
 namespace App\EventSubscriber;
 
-use App\Entity\Boisson;
-use App\Entity\Burger;
 use App\Entity\Menu;
-use App\Entity\PortionFrite;
+use App\Entity\Burger;
+use App\Entity\Boisson;
 use Doctrine\ORM\Events;
+use App\Entity\PortionFrite;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
+use Symfony\Component\Security\Http\Event\CheckPassportEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -23,8 +25,18 @@ class UserSubscriber implements EventSubscriberInterface
     {
         return [
         Events::prePersist,
+        CheckPassportEvent::class => 'onCheckPassport',
         ];
     }
+    public function onCheckPassport(CheckPassportEvent $event)
+    {
+        $passport = $event->getPassport();
+        $user = $passport->getUser();
+        //dd($user->isIsVerified());
+        if ($user->isIsVerified() == false ) {
+            throw new AuthenticationException();
+        }
+     }
     private function getUser()
     {
         //dd($this->token);
@@ -50,6 +62,23 @@ class UserSubscriber implements EventSubscriberInterface
         }
         if ($args->getObject() instanceof Menu) {
             $args->getObject()->setGestionnaire($this->getUser());
+
+            $prixMenu = 0;
+            $burgers = $args->getObject()->getBurgers();
+            $boissons = $args->getObject()->getTailleBoissons();
+            $frites = $args->getObject()->getPortionFrites();
+
+            foreach($burgers as $burger ){
+                $prixMenu += $burger->getPrix();
+            }
+            foreach($boissons as $boisson ){
+                $prixMenu += $boisson->getPrix();
+            }
+            foreach($frites as $frite ){
+                $prixMenu += $frite->getPrix();
+            }
+          
+            $args->getObject()->setPrix($prixMenu);
         }
     }
 }

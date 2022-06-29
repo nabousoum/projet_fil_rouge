@@ -31,10 +31,6 @@ class Produit
     #[Groups(["burger:read:simple","burger:read:all","write"])]
     protected $nom;
 
-    #[ORM\Column(type: 'string', length: 255)]
-    #[Assert\NotBlank(message:'le burger doit avoir une image')]
-    #[Groups(["burger:read:simple","burger:read:all","write"])]
-    protected $image;
 
     #[ORM\Column(type: 'float')]
     #[Assert\NotBlank(message:'le burger doit avoir un prix')]
@@ -46,12 +42,19 @@ class Produit
     protected $etat="disponible";
 
     #[ORM\Column(type: 'text')]
-    #[Groups(["burger:read:simple","burger:read:all","write"])]
+   #[Groups(["burger:read:simple","burger:read:all","write"])] 
     #[Assert\NotBlank(message:'le burger doit avoir une description')]
     protected $description;
 
     #[ORM\OneToMany(mappedBy: 'produit', targetEntity: ProduitCommande::class)]
     private $produitCommandes;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private $image;
+
+    // #[ORM\Column(type: 'blob')]
+    // #[Groups(["burger:read:simple","burger:read:all","write"])]
+    // protected $image;
 
     public function __construct()
     {
@@ -74,19 +77,6 @@ class Produit
 
         return $this;
     }
-
-    public function getImage(): ?string
-    {
-        return $this->image;
-    }
-
-    public function setImage(string $image): self
-    {
-        $this->image = $image;
-
-        return $this;
-    }
-
     public function getPrix(): ?float
     {
         return $this->prix;
@@ -152,4 +142,18 @@ class Produit
 
         return $this;
     }
+
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
+    public function setImage(?string $image): self
+    {
+        $this->image = $image;
+
+        return $this;
+    }
+
+ 
 }

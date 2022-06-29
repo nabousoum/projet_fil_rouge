@@ -1,15 +1,16 @@
 <?php
 namespace App\DataPersister;
 
+use DateTime;
 use App\Entity\User;
 use App\Entity\Client;
 use App\Service\Mailer;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use ApiPlatform\Core\DataPersister\DataPersisterInterface;
-use DateTime;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Routing\Annotation\Route;
 
 class UserDataPersister implements DataPersisterInterface
 {
@@ -17,11 +18,13 @@ class UserDataPersister implements DataPersisterInterface
     $passwordHasher;
     private EntityManagerInterface $entityManager;
     public function __construct(UserPasswordHasherInterface $passwordHasher,
-    EntityManagerInterface $entityManager, Mailer $mailer)
+    EntityManagerInterface $entityManager, Mailer $mailer,
+    )
     {
         $this->passwordHasher= $passwordHasher;
         $this->mailer = $mailer;
         $this->entityManager = $entityManager;
+
     }
     public function supports($data): bool
     {

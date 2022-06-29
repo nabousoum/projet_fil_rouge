@@ -1,26 +1,36 @@
 <?php
 namespace App\DataPersister;
 
+use App\Entity\Menu;
+use App\Entity\Produit;
+use App\Service\FileUploader;
 use Doctrine\ORM\EntityManagerInterface;
 use ApiPlatform\Core\DataPersister\DataPersisterInterface;
-use App\Entity\Produit;
 
 class ProduitDataPersister implements DataPersisterInterface
 {
     private EntityManagerInterface $entityManager;
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(EntityManagerInterface $entityManager,FileUploader $file)
     {
         $this->entityManager = $entityManager;
+        $this->file = $file;
     }
     public function supports($data): bool
     {
         return $data instanceof Produit;
+         
     }
     /**
-    * @param Produit $data
+    * @param Produit,Menu $data
     */
     public function persist($data)
     {
+
+        // $image = $data->getImage();
+        // $imageUpload = $this->file->upload($image);
+        // dd($imageUpload);
+        // $data->setImage($imageUpload);
+    
         $this->entityManager->persist($data);
         $this->entityManager->flush();
     }
