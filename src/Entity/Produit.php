@@ -28,13 +28,13 @@ class Produit
 
     #[ORM\Column(type: 'string', length: 255)]
     #[Assert\NotBlank(message:'le burger ne doit pas etre vide')]
-    #[Groups(["burger:read:simple","burger:read:all","write"])]
+    #[Groups(["burger:read:simple","burger:read:all","write","catalogue:read:simple"])]
     protected $nom;
 
 
     #[ORM\Column(type: 'float')]
     #[Assert\NotBlank(message:'le burger doit avoir un prix')]
-    #[Groups(["burger:read:simple","burger:read:all","write"])]
+    #[Groups(["burger:read:simple","burger:read:all","write","catalogue:read:simple"])]
     protected $prix;
 
     #[ORM\Column(type: 'string', length: 255)]
@@ -42,14 +42,14 @@ class Produit
     protected $etat="disponible";
 
     #[ORM\Column(type: 'text')]
-   #[Groups(["burger:read:simple","burger:read:all","write"])] 
+    #[Groups(["burger:read:simple","burger:read:all","write","catalogue:read:simple"])] 
     #[Assert\NotBlank(message:'le burger doit avoir une description')]
     protected $description;
 
     #[ORM\OneToMany(mappedBy: 'produit', targetEntity: ProduitCommande::class)]
     private $produitCommandes;
 
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[ORM\Column(type: 'blob', nullable: true)]
     private $image;
 
     // #[ORM\Column(type: 'blob')]
@@ -143,17 +143,16 @@ class Produit
         return $this;
     }
 
-    public function getImage(): ?string
+    public function getImage()
     {
         return $this->image;
     }
 
-    public function setImage(?string $image): self
+    public function setImage($image): self
     {
         $this->image = $image;
 
         return $this;
     }
-
  
 }

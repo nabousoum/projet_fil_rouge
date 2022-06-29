@@ -49,8 +49,6 @@ class Menu extends Produit
     #[Groups(["burger:read:simple","burger:read:all","write"])]
     private $burgers;
 
-    #[ORM\ManyToOne(targetEntity: Catalogue::class, inversedBy: 'menus')]
-    #[ORM\JoinColumn(nullable: false)]
     #[Groups(["burger:read:simple","burger:read:all","write"])]
     private $catalogue;
 
@@ -66,7 +64,7 @@ class Menu extends Produit
     private $tailleBoissons;
 
     public function __construct()
-    {
+    { 
         $this->complements = new ArrayCollection();
         $this->burgers = new ArrayCollection();
         $this->portionFrites = new ArrayCollection();

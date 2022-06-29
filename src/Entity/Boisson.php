@@ -25,6 +25,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
         "security_message"=>"Vous n'avez pas access à cette Ressource",
     ]],
     itemOperations:["put"=>[
+        'denormalization_context' => ['groups' => ['write']],
         "security"=>"is_granted('ROLE_GESTIONNAIRE')",
         "security_message"=>"Vous n'avez pas access à cette Ressource",
     ],

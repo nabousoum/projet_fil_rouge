@@ -2,15 +2,23 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
-use App\Repository\CatalogueRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\CatalogueRepository;
+use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\HttpFoundation\Response;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: CatalogueRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    collectionOperations:[
+        "get"=>[
+        'method' => 'get',
+        'status' => Response::HTTP_OK,
+        'normalization_context' => ['groups' => ['catalogue:read:simple']],
+        ]]
+)]
 class Catalogue
 {
     #[ORM\Id]
@@ -19,9 +27,11 @@ class Catalogue
     private $id;
 
     #[ORM\OneToMany(mappedBy: 'catalogue', targetEntity: Menu::class)]
+    #[Groups(["catalogue:read:simple"])]
     private $menus;
 
     #[ORM\OneToMany(mappedBy: 'catalogue', targetEntity: Burger::class)]
+    #[Groups(["catalogue:read:simple"])]
     private $burgers;
 
     public function __construct()
