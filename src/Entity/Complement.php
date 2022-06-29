@@ -2,14 +2,23 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
-use App\Repository\ComplementRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\ComplementRepository;
+use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\HttpFoundation\Response;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ComplementRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    collectionOperations:[
+        "get"=>[
+        'method' => 'get',
+        'status' => Response::HTTP_OK,
+        'normalization_context' => ['groups' => ['complement:read:simple']],
+        ]]
+)]
 class Complement
 {
     #[ORM\Id]
@@ -18,9 +27,11 @@ class Complement
     private $id;
 
     #[ORM\OneToMany(mappedBy: 'complement', targetEntity: PortionFrite::class)]
+    #[Groups(["catalogue:read:simple"])]
     private $portionFrites;
 
     #[ORM\OneToMany(mappedBy: 'complement', targetEntity: TailleBoisson::class)]
+    #[Groups(["catalogue:read:simple"])]
     private $tailleBoissons;
 
     public function __construct()

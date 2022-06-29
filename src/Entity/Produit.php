@@ -28,13 +28,13 @@ class Produit
 
     #[ORM\Column(type: 'string', length: 255)]
     #[Assert\NotBlank(message:'le burger ne doit pas etre vide')]
-    #[Groups(["burger:read:simple","burger:read:all","write","catalogue:read:simple"])]
+    #[Groups(["burger:read:simple","burger:read:all","write","catalogue:read:simple","complement:read:simple"])]
     protected $nom;
 
 
     #[ORM\Column(type: 'float')]
     #[Assert\NotBlank(message:'le burger doit avoir un prix')]
-    #[Groups(["burger:read:simple","burger:read:all","write","catalogue:read:simple"])]
+    #[Groups(["burger:read:simple","burger:read:all","write","catalogue:read:simple","complement:read:simple"])]
     protected $prix;
 
     #[ORM\Column(type: 'string', length: 255)]
@@ -42,7 +42,7 @@ class Produit
     protected $etat="disponible";
 
     #[ORM\Column(type: 'text')]
-    #[Groups(["burger:read:simple","burger:read:all","write","catalogue:read:simple"])] 
+    #[Groups(["burger:read:simple","burger:read:all","write","catalogue:read:simple","complement:read:simple"])] 
     #[Assert\NotBlank(message:'le burger doit avoir une description')]
     protected $description;
 

@@ -49,17 +49,17 @@ class TailleBoisson
     private $id;
 
     #[ORM\Column(type: 'float')]
-    #[Groups(["burger:read:simple","burger:read:all","write"])]
+    #[Groups(["burger:read:simple","burger:read:all","write","complement:read:simple"])]
     private $prix;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(["burger:read:simple","burger:read:all","write"])]
+    #[Groups(["burger:read:simple","burger:read:all","write","complement:read:simple"])]
     private $libelle;
 
     #[ORM\ManyToMany(targetEntity: Boisson::class, mappedBy: 'tailleBoissons')]
     private $boissons;
 
-    #[ORM\ManyToOne(targetEntity: Complement::class, inversedBy: 'tailleBoissons')]
+   
     #[Groups(["burger:read:simple","burger:read:all","write"])]
     private $complement;
 
