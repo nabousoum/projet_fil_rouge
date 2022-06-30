@@ -4,4 +4,6 @@ api_platform:
     patch_formats:
         json: ['application/merge-patch+json']
         mime_types: ['multipart/form-data']
-
+    collection:
+        pagination:
+            items_per_page: 2
