@@ -12,12 +12,10 @@ use ApiPlatform\Core\DataProvider\ContextAwareCollectionDataProviderInterface;
 final class CatalogueDataProvider implements ContextAwareCollectionDataProviderInterface, RestrictedDataProviderInterface
 {
     
-    private $burgerRepo;
-    private $menuRepo;
-    public function __construct(BurgerRepository $burgerRepo,MenuRepository $menuRepo)
+    private $catalogue;
+    public function __construct(BurgerRepository $burgerRepo, MenuRepository $menuRepo)
     {
-      $this->burgerRepo = $burgerRepo;
-      $this->menuRepo = $menuRepo;
+      $this->catalogue = new Catalogue($burgerRepo,$menuRepo);
     }
 
     public function supports(string $resourceClass, string $operationName = null, array $context = []): bool
@@ -27,10 +25,11 @@ final class CatalogueDataProvider implements ContextAwareCollectionDataProviderI
 
     public function getCollection(string $resourceClass, string $operationName = null, array $context = []): iterable
     {
-        $catalogues=[];
-        $catalogues[] = $this->burgerRepo->findBy(['etat'=>'disponible']);
-        $catalogues[] = $this->menuRepo->findBy(['etat'=>'disponible']);
-        return $catalogues;
+       
+        return [
+            $this->catalogue->getBurgers(),
+            $this->catalogue->getMenus()
+        ];
         //yield new Catalogue(2);
     }
 }

@@ -33,7 +33,6 @@ class Produit
 
 
     #[ORM\Column(type: 'float')]
-    #[Assert\NotBlank(message:'le burger doit avoir un prix')]
     #[Groups(["burger:read:simple","burger:read:all","write","catalogue:read:simple","complement:read:simple"])]
     protected $prix;
 
@@ -50,7 +49,8 @@ class Produit
     private $produitCommandes;
 
     #[ORM\Column(type: 'blob', nullable: true)]
-    private $image;
+    #[Groups(["write"])]
+    protected $image;
 
     // #[ORM\Column(type: 'blob')]
     // #[Groups(["burger:read:simple","burger:read:all","write"])]

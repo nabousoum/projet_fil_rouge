@@ -63,22 +63,6 @@ class UserSubscriber implements EventSubscriberInterface
         if ($args->getObject() instanceof Menu) {
             $args->getObject()->setGestionnaire($this->getUser());
 
-            $prixMenu = 0;
-            $burgers = $args->getObject()->getBurgers();
-            $boissons = $args->getObject()->getTailleBoissons();
-            $frites = $args->getObject()->getPortionFrites();
-
-            foreach($burgers as $burger ){
-                $prixMenu += $burger->getPrix();
-            }
-            foreach($boissons as $boisson ){
-                $prixMenu += $boisson->getPrix();
-            }
-            foreach($frites as $frite ){
-                $prixMenu += $frite->getPrix();
-            }
-          
-            $args->getObject()->setPrix($prixMenu);
         }
     }
 }

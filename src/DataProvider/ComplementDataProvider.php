@@ -4,6 +4,7 @@
 namespace App\DataProvider;
 
 use App\Entity\Complement;
+use App\Repository\BoissonRepository;
 use App\Repository\PortionFriteRepository;
 use App\Repository\TailleBoissonRepository;
 use ApiPlatform\Core\DataProvider\RestrictedDataProviderInterface;
@@ -12,12 +13,10 @@ use ApiPlatform\Core\DataProvider\ContextAwareCollectionDataProviderInterface;
 final class ComplementDataProvider implements ContextAwareCollectionDataProviderInterface, RestrictedDataProviderInterface
 {
     
-    private $boissonRepo;
-    private $fritesRepo;
-    public function __construct(TailleBoissonRepository $boissonRepo,PortionFriteRepository $fritesRepo)
+    private $complement;
+    public function __construct(BoissonRepository $boissonRepo,PortionFriteRepository $fritesRepo)
     {
-      $this->boissonRepo = $boissonRepo;
-      $this->fritesRepo = $fritesRepo;
+      $this->complement = new Complement($fritesRepo,$boissonRepo);
     }
 
     public function supports(string $resourceClass, string $operationName = null, array $context = []): bool
@@ -27,10 +26,9 @@ final class ComplementDataProvider implements ContextAwareCollectionDataProvider
 
     public function getCollection(string $resourceClass, string $operationName = null, array $context = []): iterable
     {
-        $complements=[];
-        $complements[] = $this->boissonRepo->findAll();
-        $complements[] = $this->fritesRepo->findAll();
-        return $complements;
-        //yield new Catalogue(2);
+        return[
+            $this->complement->getPortionFrites(),
+            $this->complement->getTailleBoissons()
+        ];
     }
 }

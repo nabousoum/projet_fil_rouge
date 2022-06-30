@@ -21,16 +21,35 @@ class ProduitDataPersister implements DataPersisterInterface
          
     }
     /**
-    * @param Produit,Menu $data
+    * @param Produit $data
     */
     public function persist($data)
     {
         // $im = $data->getImage();
+        // dd($image);
         // $imageUpload = $this->file->upload($im);
         // $strm = fopen($this->file,$imageUpload);
-        // $imageU = base64_encode(stream_get_contents($strm));
-    
-        // $data->setImage($imageU);
+        // $imageU = base64_encode(stream_get_contents($image));
+        // $data->setImage($imageUpload);
+        if($data instanceof Menu){
+            $prixMenu = 0;
+            $burgers = $data->getBurgers();
+            $boissons = $data->getTailleBoissons();
+            $frites = $data->getPortionFrites();
+
+            foreach($burgers as $burger ){
+                $prixMenu += $burger->getPrix();
+            }
+            foreach($boissons as $boisson ){
+                $prixMenu += $boisson->getPrix();
+            }
+            foreach($frites as $frite ){
+                $prixMenu += $frite->getPrix();
+            }
+          
+            $data->setPrix($prixMenu);
+        }
+     
         $this->entityManager->persist($data);
         $this->entityManager->flush();
     }
