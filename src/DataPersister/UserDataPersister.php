@@ -9,15 +9,15 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use ApiPlatform\Core\DataPersister\DataPersisterInterface;
+use App\Service\PasswordHasher;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class UserDataPersister implements DataPersisterInterface
 {
-    private UserPasswordHasherInterface
-    $passwordHasher;
+
     private EntityManagerInterface $entityManager;
-    public function __construct(UserPasswordHasherInterface $passwordHasher,
+    public function __construct(PasswordHasher $passwordHasher,
     EntityManagerInterface $entityManager, Mailer $mailer,
     )
     {
@@ -35,11 +35,8 @@ class UserDataPersister implements DataPersisterInterface
     */
     public function persist($data)
     {
-        $hashedPassword = $this->passwordHasher->hashPassword(
-        $data,
-        $data->getPassword()
-        );
-        $data->setPassword($hashedPassword);
+       
+        $data->setPassword($this->passwordHasher->passwordHash($data));
         $data->setToken($this->generateToken());
         $data->setRoles(["ROLE_CLIENT"]);
         $data->setExpiredAt(new \DateTime('+1 days'));

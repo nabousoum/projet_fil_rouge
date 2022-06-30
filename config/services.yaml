@@ -41,3 +41,4 @@ services:
         arguments:
             $decorated: '@App\EventListener\DeserializeListener.inner'
     App\Service\PrixMenu: ~ 
+    App\Service\PasswordHasher: ~ 

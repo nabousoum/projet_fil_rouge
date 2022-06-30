@@ -34,7 +34,6 @@ class ProduitDataPersister implements DataPersisterInterface
         // $imageU = base64_encode(stream_get_contents($image));
         // $data->setImage($imageUpload);
         if($data instanceof Menu){
-
             $data->setPrix($this->prixMenu->getPrix($data));
         }
      
