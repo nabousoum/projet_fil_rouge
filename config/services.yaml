@@ -40,3 +40,4 @@ services:
         decorates: 'api_platform.listener.request.deserialize'
         arguments:
             $decorated: '@App\EventListener\DeserializeListener.inner'
+    App\Service\PrixMenu: ~ 

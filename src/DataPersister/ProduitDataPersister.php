@@ -3,6 +3,7 @@ namespace App\DataPersister;
 
 use App\Entity\Menu;
 use App\Entity\Produit;
+use App\Service\PrixMenu;
 use App\Service\FileUploader;
 use Doctrine\ORM\EntityManagerInterface;
 use ApiPlatform\Core\DataPersister\DataPersisterInterface;
@@ -10,10 +11,11 @@ use ApiPlatform\Core\DataPersister\DataPersisterInterface;
 class ProduitDataPersister implements DataPersisterInterface
 {
     private EntityManagerInterface $entityManager;
-    public function __construct(EntityManagerInterface $entityManager,FileUploader $file)
+    public function __construct(PrixMenu $prixMenu,EntityManagerInterface $entityManager,FileUploader $file)
     {
         $this->entityManager = $entityManager;
         $this->file = $file;
+        $this->prixMenu = $prixMenu;
     }
     public function supports($data): bool
     {
@@ -32,22 +34,8 @@ class ProduitDataPersister implements DataPersisterInterface
         // $imageU = base64_encode(stream_get_contents($image));
         // $data->setImage($imageUpload);
         if($data instanceof Menu){
-            $prixMenu = 0;
-            $burgers = $data->getBurgers();
-            $boissons = $data->getTailleBoissons();
-            $frites = $data->getPortionFrites();
 
-            foreach($burgers as $burger ){
-                $prixMenu += $burger->getPrix();
-            }
-            foreach($boissons as $boisson ){
-                $prixMenu += $boisson->getPrix();
-            }
-            foreach($frites as $frite ){
-                $prixMenu += $frite->getPrix();
-            }
-          
-            $data->setPrix($prixMenu);
+            $data->setPrix($this->prixMenu->getPrix($data));
         }
      
         $this->entityManager->persist($data);
