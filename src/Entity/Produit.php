@@ -54,7 +54,7 @@ class Produit
 
     // #[ORM\Column(type: 'blob')]
     // #[Groups(["burger:read:simple","burger:read:all","write"])]
-    // protected $image;
+    protected $imageBlob;
 
     public function __construct()
     {
@@ -155,4 +155,24 @@ class Produit
         return $this;
     }
  
+
+    /**
+     * Get the value of imageBlob
+     */ 
+    public function getImageBlob()
+    {
+        return $this->imageBlob;
+    }
+
+    /**
+     * Set the value of imageBlob
+     *
+     * @return  self
+     */ 
+    public function setImageBlob($imageBlob)
+    {
+        $this->imageBlob = $imageBlob;
+
+        return $this;
+    }
 }

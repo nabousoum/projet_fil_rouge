@@ -19,9 +19,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
         'normalization_context' => ['groups' => ['burger:read:simple']],
         ]
     ,"post"=>[
-        // 'input_formats' => [
-        //     'multipart' => ['multipart/form-data'],
-        // ],
+        'input_formats' => [
+            'multipart' => ['multipart/form-data'],
+        ],
         'denormalization_context' => ['groups' => ['write']],
         'normalization_context' => ['groups' => ['burger:read:all']],
         "security"=>"is_granted('ROLE_GESTIONNAIRE')",

@@ -6,7 +6,9 @@ use App\Entity\Produit;
 use App\Service\PrixMenu;
 use App\Service\FileUploader;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use ApiPlatform\Core\DataPersister\DataPersisterInterface;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class ProduitDataPersister implements DataPersisterInterface
 {
@@ -27,12 +29,11 @@ class ProduitDataPersister implements DataPersisterInterface
     */
     public function persist($data)
     {
-        // $im = $data->getImage();
-        // dd($image);
-        // $imageUpload = $this->file->upload($im);
-        // $strm = fopen($this->file,$imageUpload);
-        // $imageU = base64_encode(stream_get_contents($image));
-        // $data->setImage($imageUpload);
+        //dd($this->file->encode());
+        $data->setImageBlob($this->file->encode());     
+        // dd($data);
+        $im = $this->file->encode();
+         $data->setImage($im);
         if($data instanceof Menu){
             $data->setPrix($this->prixMenu->getPrix($data));
         }

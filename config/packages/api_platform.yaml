@@ -7,3 +7,8 @@ api_platform:
     collection:
         pagination:
             items_per_page: 2
+    formats:
+        json: ['application/json']
+        jsonld: ['application/ld+json']
+        html: ['text/html']
+        multipart: ['multipart/form-data']
