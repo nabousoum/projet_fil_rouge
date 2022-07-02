@@ -53,7 +53,7 @@ class Produit
     protected $image;
 
     // #[ORM\Column(type: 'blob')]
-    // #[Groups(["burger:read:simple","burger:read:all","write"])]
+    #[Groups(["write"])]
     protected $imageBlob;
 
     public function __construct()
