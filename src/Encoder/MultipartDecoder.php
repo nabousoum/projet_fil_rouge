@@ -18,6 +18,7 @@ final class MultipartDecoder implements DecoderInterface
     public function decode(string $data, string $format, array $context = []): ?array
     {
         $request = $this->requestStack->getCurrentRequest();
+        //dd($request->files->all());
         $prix = $request->request->all()['prix'];
         $prix = floatval($prix);
         $request->request->set('prix',$prix);

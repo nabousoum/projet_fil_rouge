@@ -7,20 +7,57 @@ use App\Repository\ZoneRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: ZoneRepository::class)]
-#[ApiResource]
+#[UniqueEntity(fields:'libelle',message:'le libelle de la zone doit etre unique')]
+#[ApiResource(
+    collectionOperations:[
+        "get"=>[
+        'method' => 'get',
+        'status' => Response::HTTP_OK,
+        'normalization_context' => ['groups' => ['zone:read:simple']],
+        "security" => "is_granted('ZONE_ALL',_api_resource_class)", 
+        ]
+    ,"post"=>[
+        "security_post_denormalize" => "is_granted('ZONE_CREATE', object)" ,
+        'denormalization_context' => ['groups' => ['zone:write']],
+        'normalization_context' => ['groups' => ['zone:read:all']],
+    ]],
+    itemOperations:["put"=>[
+        "security" => "is_granted('ZONE_EDIT', object)" ,
+    ],
+    "get"=>[
+        'method' => 'get',
+        'status' => Response::HTTP_OK,
+        'normalization_context' => ['groups' => ['zone:read:all']],
+        "security" => "is_granted('ZONE_READ', object)", 
+        ],
+    "delete"=>[
+
+        ]
+    ],
+  
+)]
 class Zone
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(["zone:read:all","zone:write","quartier:write","zone:read:simple","quartier:read:simple","com:write"])]
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\NotBlank(message:'le libelle de la zone ne doit pas etre vide')]
+    #[Groups(["zone:read:all","zone:write","zone:read:simple","quartier:read:simple"])]
     private $libelle;
 
     #[ORM\Column(type: 'float')]
+    #[Assert\NotBlank(message:'le prix de la zone ne doit pas etre vide')]
+    #[Groups(["zone:read:all","zone:write","zone:read:simple","quartier:read:simple"])]
     private $prix;
 
     #[ORM\OneToMany(mappedBy: 'zone', targetEntity: Commande::class)]

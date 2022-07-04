@@ -29,8 +29,8 @@ class ProduitDataPersister implements DataPersisterInterface
     */
     public function persist($data)
     {
+       //dd($data);
         $data->setImageBlob($this->file->encode());    
-        // dd($data);
         $im = $this->file->encode();
         $data->setImage($im);      
         if($data instanceof Menu){

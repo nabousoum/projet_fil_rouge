@@ -2,26 +2,47 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
-use App\Repository\LivreurRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\LivreurRepository;
+use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\HttpFoundation\Response;
 
 #[ORM\Entity(repositoryClass: LivreurRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    collectionOperations:[
+        "get"=>[
+            'normalization_context' => ['groups' => ['livreur:read:all']],
+        ],
+        "post_register" => [
+        "method"=>"post",
+        'normalization_context' => ['groups' => ['livreur:read:simple']],
+        ]
+        ],itemOperations:["put",
+            "get"=>[
+                'method' => 'get',
+                'status' => Response::HTTP_OK,
+                'normalization_context' => ['groups' => ['livreur:read:all']]
+            ]
+        ]
+)]
 class Livreur extends User
 {
 
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(["livreur:read:simple","livreur:read:all"])]
     private $matriculeMoto;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(["livreur:read:simple","livreur:read:all"])]
     private $telephone;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $etat;
+    #[Groups(["livreur:read:all"])]
+    private $etat="dsponible";
 
     #[ORM\OneToMany(mappedBy: 'livreur', targetEntity: Livraison::class)]
     private $livraisons;

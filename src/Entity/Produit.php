@@ -49,7 +49,7 @@ class Produit
     private $produitCommandes;
 
     #[ORM\Column(type: 'blob', nullable: true)]
-    #[Groups(["write"])]
+    #[Groups(["write","burger:read:simple"])]
     protected $image;
 
     // #[ORM\Column(type: 'blob')]
@@ -145,7 +145,7 @@ class Produit
 
     public function getImage()
     {
-        return $this->image;
+        return base64_encode(stream_get_contents($this->image));
     }
 
     public function setImage($image): self

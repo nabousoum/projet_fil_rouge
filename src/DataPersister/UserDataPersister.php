@@ -4,12 +4,13 @@ namespace App\DataPersister;
 use DateTime;
 use App\Entity\User;
 use App\Entity\Client;
+use App\Entity\Livreur;
 use App\Service\Mailer;
+use App\Service\PasswordHasher;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use ApiPlatform\Core\DataPersister\DataPersisterInterface;
-use App\Service\PasswordHasher;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
@@ -38,7 +39,12 @@ class UserDataPersister implements DataPersisterInterface
        
         $data->setPassword($this->passwordHasher->passwordHash($data));
         $data->setToken($this->generateToken());
-        $data->setRoles(["ROLE_CLIENT"]);
+        if($data instanceof Client){
+            $data->setRoles(["ROLE_CLIENT"]);
+        }
+        elseif($data instanceof Livreur){
+            $data->setRoles(["ROLE_LIVREUR"]);
+        }
         $data->setExpiredAt(new \DateTime('+1 days'));
         $this->entityManager->persist($data);
         $this->entityManager->flush();

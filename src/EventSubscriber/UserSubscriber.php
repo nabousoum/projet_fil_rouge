@@ -5,6 +5,7 @@ namespace App\EventSubscriber;
 use App\Entity\Menu;
 use App\Entity\Burger;
 use App\Entity\Boisson;
+use App\Entity\Commande;
 use Doctrine\ORM\Events;
 use App\Entity\PortionFrite;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
@@ -25,18 +26,18 @@ class UserSubscriber implements EventSubscriberInterface
     {
         return [
         Events::prePersist,
-        CheckPassportEvent::class => 'onCheckPassport',
+        // CheckPassportEvent::class => 'onCheckPassport',
         ];
     }
-    public function onCheckPassport(CheckPassportEvent $event)
-    {
-        $passport = $event->getPassport();
-        $user = $passport->getUser();
-        //dd($user->isIsVerified());
-        if ($user->isIsVerified() == false ) {
-            throw new AuthenticationException();
-        }
-     }
+    // public function onCheckPassport(CheckPassportEvent $event)
+    // {
+    //     $passport = $event->getPassport();
+    //     $user = $passport->getUser();
+    //     //dd($user->isIsVerified());
+    //     if ($user->isIsVerified() == false ) {
+    //         throw new AuthenticationException();
+    //     }
+    //  }
     private function getUser()
     {
         //dd($this->token);
@@ -62,7 +63,9 @@ class UserSubscriber implements EventSubscriberInterface
         }
         if ($args->getObject() instanceof Menu) {
             $args->getObject()->setGestionnaire($this->getUser());
-
+        }
+        if ($args->getObject() instanceof Commande) {
+            $args->getObject()->setClient($this->getUser());
         }
     }
 }

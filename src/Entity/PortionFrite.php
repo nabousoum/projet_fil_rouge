@@ -8,9 +8,40 @@ use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\HttpFoundation\Response;
 
 #[ORM\Entity(repositoryClass: PortionFriteRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    collectionOperations:[
+        "get"=>[
+        'method' => 'get',
+        'status' => Response::HTTP_OK,
+        'normalization_context' => ['groups' => ['burger:read:simple']],
+        ]
+    ,"post"=>[
+        'method'=>'post',
+        'denormalization_context' => ['groups' => ['write']],
+        'normalization_context' => ['groups' => ['burger:read:all']],
+        "security"=>"is_granted('ROLE_GESTIONNAIRE')",
+        "security_message"=>"Vous n'avez pas access à cette Ressource",
+    ]],
+    itemOperations:["put"=>[
+        "security"=>"is_granted('ROLE_GESTIONNAIRE')",
+        "security_message"=>"Vous n'avez pas access à cette Ressource",
+        'denormalization_context' => ['groups' => ['write']],
+    ],
+    "get"=>[
+        'method' => 'get',
+        'status' => Response::HTTP_OK,
+        'normalization_context' => ['groups' => ['burger:read:all']],
+        ],
+    "delete"=>[
+        "security"=>"is_granted('ROLE_GESTIONNAIRE')",
+        "security_message"=>"Vous n'avez pas access à cette Ressource",
+        ]
+    ],
+  
+)]
 class PortionFrite extends Produit
 {
 

@@ -15,8 +15,9 @@ class FileUploader
     public function encode(){
         $request = $this->requestStack->getCurrentRequest();
         $image = $request->files->all()['imageBlob']->getRealPath();
-        $im = file_get_contents($image);
-        return $im;
+        $image = fopen($image, 'rb');
+        return stream_get_contents($image);
+        //fclose($image);
     }
     
 }
