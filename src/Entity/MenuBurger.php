@@ -19,6 +19,7 @@ class MenuBurger
 
     #[ORM\Column(type: 'integer')]
     #[Groups(["burger:read:all","write","burger:read:simple"])]
+    #[Assert\NegativeOrZero(message:'la quantite doit etre egal au moins a 1')]
     private $quantite;
 
     #[ORM\ManyToOne(targetEntity: Menu::class, inversedBy: 'menuBurgers')]
