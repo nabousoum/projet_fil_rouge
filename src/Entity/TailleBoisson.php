@@ -58,18 +58,17 @@ class TailleBoisson
 
     #[ORM\ManyToMany(targetEntity: Boisson::class, mappedBy: 'tailleBoissons')]
     private $boissons;
-
    
     #[Groups(["burger:read:simple","burger:read:all","write"])]
     private $complement;
 
-    #[ORM\ManyToMany(targetEntity: Menu::class, mappedBy: 'tailleBoissons')]
-    private $menus;
+    #[ORM\OneToMany(mappedBy: 'tailleBoisson', targetEntity: MenuTailleBoisson::class)]
+    private $menuTailleBoissons;
 
     public function __construct()
     {
         $this->boissons = new ArrayCollection();
-        $this->menus = new ArrayCollection();
+        $this->menuTailleBoissons = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -141,27 +140,30 @@ class TailleBoisson
     }
 
     /**
-     * @return Collection<int, Menu>
+     * @return Collection<int, MenuTailleBoisson>
      */
-    public function getMenus(): Collection
+    public function getMenuTailleBoissons(): Collection
     {
-        return $this->menus;
+        return $this->menuTailleBoissons;
     }
 
-    public function addMenu(Menu $menu): self
+    public function addMenuTailleBoisson(MenuTailleBoisson $menuTailleBoisson): self
     {
-        if (!$this->menus->contains($menu)) {
-            $this->menus[] = $menu;
-            $menu->addTailleBoisson($this);
+        if (!$this->menuTailleBoissons->contains($menuTailleBoisson)) {
+            $this->menuTailleBoissons[] = $menuTailleBoisson;
+            $menuTailleBoisson->setTailleBoisson($this);
         }
 
         return $this;
     }
 
-    public function removeMenu(Menu $menu): self
+    public function removeMenuTailleBoisson(MenuTailleBoisson $menuTailleBoisson): self
     {
-        if ($this->menus->removeElement($menu)) {
-            $menu->removeTailleBoisson($this);
+        if ($this->menuTailleBoissons->removeElement($menuTailleBoisson)) {
+            // set the owning side to null (unless already changed)
+            if ($menuTailleBoisson->getTailleBoisson() === $this) {
+                $menuTailleBoisson->setTailleBoisson(null);
+            }
         }
 
         return $this;

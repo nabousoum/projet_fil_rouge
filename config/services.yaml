@@ -31,3 +31,4 @@ services:
     App\Service\FileUploader: ~
     App\Service\PrixMenu: ~ 
     App\Service\PasswordHasher: ~ 
+    App\Service\GenererNumCom: ~ 

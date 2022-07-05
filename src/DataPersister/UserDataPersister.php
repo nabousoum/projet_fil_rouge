@@ -22,7 +22,7 @@ class UserDataPersister implements DataPersisterInterface
     EntityManagerInterface $entityManager, Mailer $mailer,
     )
     {
-        $this->passwordHasher= $passwordHasher;
+        $this->passwordHasher = $passwordHasher;
         $this->mailer = $mailer;
         $this->entityManager = $entityManager;
 
@@ -36,7 +36,6 @@ class UserDataPersister implements DataPersisterInterface
     */
     public function persist($data)
     {
-       
         $data->setPassword($this->passwordHasher->passwordHash($data));
         $data->setToken($this->generateToken());
         if($data instanceof Client){

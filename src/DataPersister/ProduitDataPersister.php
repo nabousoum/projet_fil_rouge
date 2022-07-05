@@ -33,10 +33,11 @@ class ProduitDataPersister implements DataPersisterInterface
         $data->setImageBlob($this->file->encode());    
         $im = $this->file->encode();
         $data->setImage($im);      
-        if($data instanceof Menu){
-            $data->setPrix($this->prixMenu->getPrix($data));
-        }
-     
+            if($data instanceof Menu){
+                //dd($data);
+              //  $data->setPrix($this->prixMenu->getPrix($data));
+            }
+        
         $this->entityManager->persist($data);
         $this->entityManager->flush();
     }

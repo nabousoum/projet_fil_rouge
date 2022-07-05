@@ -48,9 +48,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Burger extends Produit
 {
 
-    #[ORM\ManyToMany(targetEntity: Menu::class, mappedBy: 'burgers')]
-    private $menus;
-
     #[Groups(["burger:read:simple","burger:read:all","write"])]
     private $catalogue;
 
@@ -58,36 +55,12 @@ class Burger extends Produit
     #[Groups(["burger:read:all","write"])]
     private $gestionnaire;
 
+    #[ORM\OneToMany(mappedBy: 'burger', targetEntity: MenuBurger::class)]
+    private $menuBurgers;
+
     public function __construct()
     {
-        $this->menus = new ArrayCollection();
-    }
-
-    /**
-     * @return Collection<int, Menu>
-     */
-    public function getMenus(): Collection
-    {
-        return $this->menus;
-    }
-
-    public function addMenu(Menu $menu): self
-    {
-        if (!$this->menus->contains($menu)) {
-            $this->menus[] = $menu;
-            $menu->addBurger($this);
-        }
-
-        return $this;
-    }
-
-    public function removeMenu(Menu $menu): self
-    {
-        if ($this->menus->removeElement($menu)) {
-            $menu->removeBurger($this);
-        }
-
-        return $this;
+        $this->menuBurgers = new ArrayCollection();
     }
 
     public function getCatalogue(): ?Catalogue
@@ -110,6 +83,36 @@ class Burger extends Produit
     public function setGestionnaire(?Gestionnaire $gestionnaire): self
     {
         $this->gestionnaire = $gestionnaire;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, MenuBurger>
+     */
+    public function getMenuBurgers(): Collection
+    {
+        return $this->menuBurgers;
+    }
+
+    public function addMenuBurger(MenuBurger $menuBurger): self
+    {
+        if (!$this->menuBurgers->contains($menuBurger)) {
+            $this->menuBurgers[] = $menuBurger;
+            $menuBurger->setBurger($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMenuBurger(MenuBurger $menuBurger): self
+    {
+        if ($this->menuBurgers->removeElement($menuBurger)) {
+            // set the owning side to null (unless already changed)
+            if ($menuBurger->getBurger() === $this) {
+                $menuBurger->setBurger(null);
+            }
+        }
 
         return $this;
     }
