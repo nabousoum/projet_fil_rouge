@@ -23,7 +23,7 @@ class Produit
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(["burger:read:simple","burger:read:all","write"])]
+    #[Groups(["burger:read:simple","burger:read:all","write","com:write"])]
     protected $id;
 
     #[ORM\Column(type: 'string', length: 255)]

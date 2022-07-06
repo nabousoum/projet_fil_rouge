@@ -18,12 +18,14 @@ class MenuCommande
     private $id;
 
     #[ORM\Column(type: 'integer')]
+    #[Groups(["com:write"])]
     private $quantite;
 
     #[ORM\Column(type: 'float')]
     private $prix;
 
     #[ORM\ManyToOne(targetEntity: Menu::class, inversedBy: 'menuCommandes')]
+    #[Groups(["com:write"])]
     private $menu;
 
     #[ORM\ManyToOne(targetEntity: Commande::class, inversedBy: 'menuCommandes')]

@@ -45,7 +45,7 @@ class TailleBoisson
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(["write"])]
+    #[Groups(["write","com:write"])]
     private $id;
 
     #[ORM\Column(type: 'float')]
@@ -64,6 +64,7 @@ class TailleBoisson
     private $menuTailleBoissons;
 
     #[ORM\OneToMany(mappedBy: 'tailleBoisson', targetEntity: BoissonTailleBoisson::class)]
+    #[Groups(["com:write"])]
     private $boissonTailleBoissons;
 
     public function __construct()

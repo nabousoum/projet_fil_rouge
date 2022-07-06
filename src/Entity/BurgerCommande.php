@@ -18,12 +18,14 @@ class BurgerCommande
     private $id;
 
     #[ORM\Column(type: 'integer')]
+    #[Groups(["com:write"])]
     private $quantite;
 
     #[ORM\Column(type: 'float')]
     private $prix;
 
     #[ORM\ManyToOne(targetEntity: Burger::class, inversedBy: 'burgerCommandes')]
+    #[Groups(["com:write"])]
     private $burger;
 
     #[ORM\ManyToOne(targetEntity: Commande::class, inversedBy: 'burgerCommandes')]

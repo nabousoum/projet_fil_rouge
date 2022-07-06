@@ -18,12 +18,14 @@ class FriteCommande
     private $id;
 
     #[ORM\Column(type: 'integer')]
+    #[Groups(["com:write"])]
     private $quantite;
 
     #[ORM\ManyToOne(targetEntity: Commande::class, inversedBy: 'friteCommandes')]
     private $commande;
 
     #[ORM\ManyToOne(targetEntity: PortionFrite::class, inversedBy: 'friteCommandes')]
+    #[Groups(["com:write"])]
     private $portionFrite;
 
     public function getId(): ?int

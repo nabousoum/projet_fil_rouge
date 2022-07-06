@@ -16,6 +16,7 @@ class MenuTailleBoisson
     #[ORM\Id]   
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(["com:write"])]
     private $id;
 
     #[ORM\Column(type: 'integer')]
@@ -27,7 +28,7 @@ class MenuTailleBoisson
     private $menu;
 
     #[ORM\ManyToOne(targetEntity: TailleBoisson::class, inversedBy: 'menuTailleBoissons')]
-    #[Groups(["burger:read:all","write","burger:read:simple"])]
+    #[Groups(["burger:read:all","write","burger:read:simple","com:write"])]
     private $tailleBoisson;
 
     public function getId(): ?int
