@@ -9,6 +9,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\HttpFoundation\Response;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: BoissonRepository::class)]
 #[ApiResource(
@@ -45,46 +46,27 @@ class Boisson extends Produit
 {
   
 
-    #[ORM\ManyToMany(targetEntity: TailleBoisson::class, inversedBy: 'boissons')]
-    #[Groups(["burger:read:simple","burger:read:all","write"])]
-    private $tailleBoissons;
-
     #[ORM\ManyToOne(targetEntity: Gestionnaire::class, inversedBy: 'boissons')]
     private $gestionnaire;
 
+    #[ORM\OneToMany(mappedBy: 'boisson', targetEntity: BoissonTailleBoisson::class,cascade:['persist'])]
+    #[Groups(["burger:read:simple","burger:read:all","write"])]
+    #[Assert\Valid]
+    #[Assert\Count(min:1,minMessage:'la boisson doit avoir une taille')]
+    private $boissonTailleBoissons;
+
+
     public function __construct()
     {
-        $this->tailleBoissons = new ArrayCollection();
+        $this->boissonTailleBoissons = new ArrayCollection();
     }
 
-    /**
-     * @return Collection<int, TailleBoisson>
-     */
-    public function getTailleBoissons(): Collection
-    {
-        return $this->tailleBoissons;
-    }
-
-    public function addTailleBoisson(TailleBoisson $tailleBoisson): self
-    {
-        if (!$this->tailleBoissons->contains($tailleBoisson)) {
-            $this->tailleBoissons[] = $tailleBoisson;
-        }
-
-        return $this;
-    }
-
-    public function removeTailleBoisson(TailleBoisson $tailleBoisson): self
-    {
-        $this->tailleBoissons->removeElement($tailleBoisson);
-
-        return $this;
-    }
 
     public function getGestionnaire(): ?Gestionnaire
     {
         return $this->gestionnaire;
     }
+
 
     public function setGestionnaire(?Gestionnaire $gestionnaire): self
     {
@@ -92,4 +74,36 @@ class Boisson extends Produit
 
         return $this;
     }
+
+    /**
+     * @return Collection<int, BoissonTailleBoisson>
+     */
+    public function getBoissonTailleBoissons(): Collection
+    {
+        return $this->boissonTailleBoissons;
+    }
+
+    public function addBoissonTailleBoisson(BoissonTailleBoisson $boissonTailleBoisson): self
+    {
+        if (!$this->boissonTailleBoissons->contains($boissonTailleBoisson)) {
+            $this->boissonTailleBoissons[] = $boissonTailleBoisson;
+            $boissonTailleBoisson->setBoisson($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBoissonTailleBoisson(BoissonTailleBoisson $boissonTailleBoisson): self
+    {
+        if ($this->boissonTailleBoissons->removeElement($boissonTailleBoisson)) {
+            // set the owning side to null (unless already changed)
+            if ($boissonTailleBoisson->getBoisson() === $this) {
+                $boissonTailleBoisson->setBoisson(null);
+            }
+        }
+
+        return $this;
+    }
+
+    
 }

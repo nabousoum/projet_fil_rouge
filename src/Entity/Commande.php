@@ -67,10 +67,31 @@ class Commande
     #[Groups(["com:write"])]
     private $zone;
 
+    #[ORM\OneToMany(mappedBy: 'commande', targetEntity: BurgerCommande::class)]
+    #[Groups(["com:read:simple","com:read:all","com:write"])]
+    private $burgerCommandes;
+
+    #[ORM\OneToMany(mappedBy: 'commande', targetEntity: MenuCommande::class)]
+    #[Groups(["com:read:simple","com:read:all","com:write"])]
+    private $menuCommandes;
+
+    #[ORM\OneToMany(mappedBy: 'commande', targetEntity: BoissonCommande::class)]
+    #[Groups(["com:read:simple","com:read:all","com:write"])]
+    private $boissonCommandes;
+
+    #[ORM\OneToMany(mappedBy: 'commande', targetEntity: FriteCommande::class)]
+    #[Groups(["com:read:simple","com:read:all","com:write"])]
+    private $friteCommandes;
+
+
 
     public function __construct()
     {
         $this->dateCommande = new \DateTime();
+        $this->burgerCommandes = new ArrayCollection();
+        $this->menuCommandes = new ArrayCollection();
+        $this->boissonCommandes = new ArrayCollection();
+        $this->friteCommandes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -173,4 +194,126 @@ class Commande
 
         return $this;
     }
+
+    /**
+     * @return Collection<int, BurgerCommande>
+     */
+    public function getBurgerCommandes(): Collection
+    {
+        return $this->burgerCommandes;
+    }
+
+    public function addBurgerCommande(BurgerCommande $burgerCommande): self
+    {
+        if (!$this->burgerCommandes->contains($burgerCommande)) {
+            $this->burgerCommandes[] = $burgerCommande;
+            $burgerCommande->setCommande($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBurgerCommande(BurgerCommande $burgerCommande): self
+    {
+        if ($this->burgerCommandes->removeElement($burgerCommande)) {
+            // set the owning side to null (unless already changed)
+            if ($burgerCommande->getCommande() === $this) {
+                $burgerCommande->setCommande(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, MenuCommande>
+     */
+    public function getMenuCommandes(): Collection
+    {
+        return $this->menuCommandes;
+    }
+
+    public function addMenuCommande(MenuCommande $menuCommande): self
+    {
+        if (!$this->menuCommandes->contains($menuCommande)) {
+            $this->menuCommandes[] = $menuCommande;
+            $menuCommande->setCommande($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMenuCommande(MenuCommande $menuCommande): self
+    {
+        if ($this->menuCommandes->removeElement($menuCommande)) {
+            // set the owning side to null (unless already changed)
+            if ($menuCommande->getCommande() === $this) {
+                $menuCommande->setCommande(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, BoissonCommande>
+     */
+    public function getBoissonCommandes(): Collection
+    {
+        return $this->boissonCommandes;
+    }
+
+    public function addBoissonCommande(BoissonCommande $boissonCommande): self
+    {
+        if (!$this->boissonCommandes->contains($boissonCommande)) {
+            $this->boissonCommandes[] = $boissonCommande;
+            $boissonCommande->setCommande($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBoissonCommande(BoissonCommande $boissonCommande): self
+    {
+        if ($this->boissonCommandes->removeElement($boissonCommande)) {
+            // set the owning side to null (unless already changed)
+            if ($boissonCommande->getCommande() === $this) {
+                $boissonCommande->setCommande(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, FriteCommande>
+     */
+    public function getFriteCommandes(): Collection
+    {
+        return $this->friteCommandes;
+    }
+
+    public function addFriteCommande(FriteCommande $friteCommande): self
+    {
+        if (!$this->friteCommandes->contains($friteCommande)) {
+            $this->friteCommandes[] = $friteCommande;
+            $friteCommande->setCommande($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFriteCommande(FriteCommande $friteCommande): self
+    {
+        if ($this->friteCommandes->removeElement($friteCommande)) {
+            // set the owning side to null (unless already changed)
+            if ($friteCommande->getCommande() === $this) {
+                $friteCommande->setCommande(null);
+            }
+        }
+
+        return $this;
+    }
+
+   
 }

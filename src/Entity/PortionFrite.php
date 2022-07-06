@@ -54,11 +54,15 @@ class PortionFrite extends Produit
     #[ORM\OneToMany(mappedBy: 'portionFrite', targetEntity: MenuPortionFrite::class)]
     private $menuPortionFrites;
 
+    #[ORM\OneToMany(mappedBy: 'portionFrite', targetEntity: FriteCommande::class)]
+    private $friteCommandes;
+
 
     public function __construct()
     {
         parent::__construct();
         $this->menuPortionFrites = new ArrayCollection();
+        $this->friteCommandes = new ArrayCollection();
     }
 
 
@@ -110,6 +114,36 @@ class PortionFrite extends Produit
             // set the owning side to null (unless already changed)
             if ($menuPortionFrite->getPortionFrite() === $this) {
                 $menuPortionFrite->setPortionFrite(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, FriteCommande>
+     */
+    public function getFriteCommandes(): Collection
+    {
+        return $this->friteCommandes;
+    }
+
+    public function addFriteCommande(FriteCommande $friteCommande): self
+    {
+        if (!$this->friteCommandes->contains($friteCommande)) {
+            $this->friteCommandes[] = $friteCommande;
+            $friteCommande->setPortionFrite($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFriteCommande(FriteCommande $friteCommande): self
+    {
+        if ($this->friteCommandes->removeElement($friteCommande)) {
+            // set the owning side to null (unless already changed)
+            if ($friteCommande->getPortionFrite() === $this) {
+                $friteCommande->setPortionFrite(null);
             }
         }
 
