@@ -6,6 +6,8 @@ use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\MenuTailleBoissonRepository;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 #[ORM\Entity(repositoryClass: MenuTailleBoissonRepository::class)]
 #[ApiResource()]
@@ -18,6 +20,7 @@ class MenuTailleBoisson
 
     #[ORM\Column(type: 'integer')]
     #[Groups(["burger:read:all","write","burger:read:simple"])]
+    #[Assert\Positive(message:'la quantite doit etre egal au moins a 1')]
     private $quantite;
 
     #[ORM\ManyToOne(targetEntity: Menu::class, inversedBy: 'menuTailleBoissons')]

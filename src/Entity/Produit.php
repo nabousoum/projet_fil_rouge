@@ -45,9 +45,6 @@ class Produit
     #[Assert\NotBlank(message:'le burger doit avoir une description')]
     protected $description;
 
-    #[ORM\OneToMany(mappedBy: 'produit', targetEntity: ProduitCommande::class)]
-    private $produitCommandes;
-
     #[ORM\Column(type: 'blob', nullable: true)]
     #[Groups(["write","burger:read:simple"])]
     protected $image;
@@ -58,7 +55,7 @@ class Produit
 
     public function __construct()
     {
-        $this->produitCommandes = new ArrayCollection();
+
     }
 
     public function getId(): ?int
@@ -109,36 +106,6 @@ class Produit
     public function setDescription(string $description): self
     {
         $this->description = $description;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, ProduitCommande>
-     */
-    public function getProduitCommandes(): Collection
-    {
-        return $this->produitCommandes;
-    }
-
-    public function addProduitCommande(ProduitCommande $produitCommande): self
-    {
-        if (!$this->produitCommandes->contains($produitCommande)) {
-            $this->produitCommandes[] = $produitCommande;
-            $produitCommande->setProduit($this);
-        }
-
-        return $this;
-    }
-
-    public function removeProduitCommande(ProduitCommande $produitCommande): self
-    {
-        if ($this->produitCommandes->removeElement($produitCommande)) {
-            // set the owning side to null (unless already changed)
-            if ($produitCommande->getProduit() === $this) {
-                $produitCommande->setProduit(null);
-            }
-        }
 
         return $this;
     }

@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 
 #[ORM\Entity(repositoryClass: MenuRepository::class)]
@@ -57,14 +58,17 @@ class Menu extends Produit
     #[ORM\OneToMany(mappedBy: 'menu', targetEntity: MenuBurger::class,cascade:['persist'])]
     #[Groups(["burger:read:simple","burger:read:all","write"])]
     #[Assert\Count(min:1,minMessage:'le menu doit avoir minimum un burger')]
+    #[Assert\Valid]
     private $menuBurgers;
 
     #[ORM\OneToMany(mappedBy: 'menu', targetEntity: MenuPortionFrite::class,cascade:['persist'])]
     #[Groups(["burger:read:simple","burger:read:all","write"])]
+    #[Assert\Valid]
     private $menuPortionFrites;
 
     #[ORM\OneToMany(mappedBy: 'menu', targetEntity: MenuTailleBoisson::class,cascade:['persist'])]
     #[Groups(["burger:read:simple","burger:read:all","write"])]
+    #[Assert\Valid]
     private $menuTailleBoissons;
 
     public function __construct()
@@ -188,5 +192,18 @@ class Menu extends Produit
         }
 
         return $this;
+    }
+
+    #[Assert\Callback]
+    public function validate(ExecutionContextInterface $context, $payload)
+    {
+        $frites = count($this->getMenuPortionFrites());
+        $boissons = count($this->getMenuTailleBoissons());
+        if ($frites==0 && $boissons==0) {
+            $context
+                ->buildViolation("le menu doit avoir au moins un complement !")
+                ->addViolation()
+            ;
+        }
     }
 }

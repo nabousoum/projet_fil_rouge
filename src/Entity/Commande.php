@@ -67,12 +67,9 @@ class Commande
     #[Groups(["com:write"])]
     private $zone;
 
-    #[ORM\OneToMany(mappedBy: 'commande', targetEntity: ProduitCommande::class)]
-    private $produitCommandes;
 
     public function __construct()
     {
-        $this->produitCommandes = new ArrayCollection();
         $this->dateCommande = new \DateTime();
     }
 
@@ -173,36 +170,6 @@ class Commande
     public function setZone(?Zone $zone): self
     {
         $this->zone = $zone;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, ProduitCommande>
-     */
-    public function getProduitCommandes(): Collection
-    {
-        return $this->produitCommandes;
-    }
-
-    public function addProduitCommande(ProduitCommande $produitCommande): self
-    {
-        if (!$this->produitCommandes->contains($produitCommande)) {
-            $this->produitCommandes[] = $produitCommande;
-            $produitCommande->setCommande($this);
-        }
-
-        return $this;
-    }
-
-    public function removeProduitCommande(ProduitCommande $produitCommande): self
-    {
-        if ($this->produitCommandes->removeElement($produitCommande)) {
-            // set the owning side to null (unless already changed)
-            if ($produitCommande->getCommande() === $this) {
-                $produitCommande->setCommande(null);
-            }
-        }
 
         return $this;
     }
