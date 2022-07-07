@@ -8,7 +8,9 @@ use App\Service\GenererNumCom;
 use App\Service\PasswordHasher;
 use Doctrine\ORM\EntityManagerInterface;
 use ApiPlatform\Core\DataPersister\DataPersisterInterface;
-
+use App\Entity\Burger;
+use App\Entity\BurgerCommande;
+use App\Service\MontantCommande;
 
 class CommandeDataPersister implements DataPersisterInterface
 {
@@ -16,12 +18,13 @@ class CommandeDataPersister implements DataPersisterInterface
     private EntityManagerInterface $entityManager;
     public function __construct(
     EntityManagerInterface $entityManager,
+    MontantCommande $montant,
     GenererNumCom $genererNum
     )
     {
         $this->entityManager = $entityManager;
         $this->genererNum = $genererNum;
-
+        $this->montant = $montant;
     }
     public function supports($data): bool
     {
@@ -33,6 +36,10 @@ class CommandeDataPersister implements DataPersisterInterface
     public function persist($data)
     {
         $data->setNumeroCommande($this->genererNum->genererCom());
+        
+        $montantCom = $this->montant->calculMontantCommande($data);
+        $data->setMontantCommande($montantCom);
+
         $this->entityManager->persist($data);
         $this->entityManager->flush();
     }

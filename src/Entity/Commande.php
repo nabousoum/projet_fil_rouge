@@ -67,19 +67,19 @@ class Commande
     #[Groups(["com:write"])]
     private $zone;
 
-    #[ORM\OneToMany(mappedBy: 'commande', targetEntity: BurgerCommande::class)]
+    #[ORM\OneToMany(mappedBy: 'commande', targetEntity: BurgerCommande::class,cascade:['persist'])]
     #[Groups(["com:read:simple","com:read:all","com:write"])]
     private $burgerCommandes;
 
-    #[ORM\OneToMany(mappedBy: 'commande', targetEntity: MenuCommande::class)]
+    #[ORM\OneToMany(mappedBy: 'commande', targetEntity: MenuCommande::class,cascade:['persist'])]
     #[Groups(["com:read:simple","com:read:all","com:write"])]
     private $menuCommandes;
 
-    #[ORM\OneToMany(mappedBy: 'commande', targetEntity: BoissonCommande::class)]
+    #[ORM\OneToMany(mappedBy: 'commande', targetEntity: BoissonCommande::class,cascade:['persist'])]
     #[Groups(["com:read:simple","com:read:all","com:write"])]
     private $boissonCommandes;
 
-    #[ORM\OneToMany(mappedBy: 'commande', targetEntity: FriteCommande::class)]
+    #[ORM\OneToMany(mappedBy: 'commande', targetEntity: FriteCommande::class,cascade:['persist'])]
     #[Groups(["com:read:simple","com:read:all","com:write"])]
     private $friteCommandes;
 

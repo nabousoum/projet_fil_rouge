@@ -28,6 +28,9 @@ class BoissonCommande
     #[ORM\ManyToOne(targetEntity: Commande::class, inversedBy: 'boissonCommandes')]
     private $commande;
 
+    #[ORM\Column(type: 'float')]
+    private $prix;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -65,6 +68,18 @@ class BoissonCommande
     public function setCommande(?Commande $commande): self
     {
         $this->commande = $commande;
+
+        return $this;
+    }
+
+    public function getPrix(): ?float
+    {
+        return $this->prix;
+    }
+
+    public function setPrix(float $prix): self
+    {
+        $this->prix = $prix;
 
         return $this;
     }

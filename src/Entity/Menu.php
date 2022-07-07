@@ -199,19 +199,6 @@ class Menu extends Produit
         return $this;
     }
 
-    #[Assert\Callback]
-    public function validate(ExecutionContextInterface $context, $payload)
-    {
-        $frites = count($this->getMenuPortionFrites());
-        $boissons = count($this->getMenuTailleBoissons());
-        if ($frites==0 && $boissons==0) {
-            $context
-                ->buildViolation("le menu doit avoir au moins un complement !")
-                ->addViolation()
-            ;
-        }
-    }
-
     /**
      * @return Collection<int, MenuCommande>
      */
@@ -233,7 +220,6 @@ class Menu extends Produit
     public function removeMenuCommande(MenuCommande $menuCommande): self
     {
         if ($this->menuCommandes->removeElement($menuCommande)) {
-            // set the owning side to null (unless already changed)
             if ($menuCommande->getMenu() === $this) {
                 $menuCommande->setMenu(null);
             }
@@ -242,5 +228,35 @@ class Menu extends Produit
         return $this;
     }
 
-   
+    #[Assert\Callback]
+    public function validate(ExecutionContextInterface $context, $payload)
+    {
+        $test = false;
+        $menuBurgers =$this->getMenuBurgers();
+        $nbrMB = count($menuBurgers);
+       
+        for($i=0;$i<$nbrMB;$i++){
+            $id0 = $menuBurgers[$i]->getBurger()->getId();
+            for($j=$i+1;$j<$nbrMB;$j++){
+                if($id0 == $menuBurgers[$j]->getBurger()->getId()){
+                    $test = true;
+                }
+            }
+        }
+        
+        $frites = count($this->getMenuPortionFrites());
+        $boissons = count($this->getMenuTailleBoissons());
+        if ($frites==0 && $boissons==0) {
+            $context
+                ->buildViolation("le menu doit avoir au moins un complement !")
+                ->addViolation()
+            ;
+        }
+        if ($test == true) {
+            $context
+                ->buildViolation("Vous avez mis deux fois le mm burger pour des quantites differents")
+                ->addViolation()
+            ;
+        }
+    }
 }

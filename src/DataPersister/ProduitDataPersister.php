@@ -29,10 +29,12 @@ class ProduitDataPersister implements DataPersisterInterface
     */
     public function persist($data)
     {
+        
         $data->setImageBlob($this->file->encode());    
         $im = $this->file->encode();
         $data->setImage($im);      
             if($data instanceof Menu){
+                //dd($data->getMenuBurgers()[0]->getBurger()->getId());
               $data->setPrix($this->prixMenu->getPrix($data));
             }
         

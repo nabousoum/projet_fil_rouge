@@ -21,12 +21,11 @@ class BoissonTailleBoisson
     private $id;
 
     #[ORM\Column(type: 'integer')]
-    #[Groups(["burger:read:all","write","burger:read:simple","com:write"])]
+    #[Groups(["burger:read:all","write","burger:read:simple"])]
     #[Assert\Positive(message:'la quantite doit etre egal au moins a 1')]
     private $quantite=1;
 
     #[ORM\ManyToOne(targetEntity: Boisson::class, inversedBy: 'boissonTailleBoissons')]
-    #[Groups(["com:write"])]
     private $boisson;
 
     #[ORM\ManyToOne(targetEntity: TailleBoisson::class, inversedBy: 'boissonTailleBoissons')]

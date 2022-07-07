@@ -28,6 +28,9 @@ class FriteCommande
     #[Groups(["com:write"])]
     private $portionFrite;
 
+    #[ORM\Column(type: 'float')]
+    private $prix;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -65,6 +68,18 @@ class FriteCommande
     public function setPortionFrite(?PortionFrite $portionFrite): self
     {
         $this->portionFrite = $portionFrite;
+
+        return $this;
+    }
+
+    public function getPrix(): ?float
+    {
+        return $this->prix;
+    }
+
+    public function setPrix(float $prix): self
+    {
+        $this->prix = $prix;
 
         return $this;
     }

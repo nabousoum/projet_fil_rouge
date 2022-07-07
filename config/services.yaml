@@ -32,3 +32,4 @@ services:
     App\Service\PrixMenu: ~ 
     App\Service\PasswordHasher: ~ 
     App\Service\GenererNumCom: ~ 
+    App\Service\MontantCommande: ~ 
